@@ -54,9 +54,24 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->token()->delete();
+        $user = $request->user();
+        $user->token()->delete();
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
+    }
+    
+    public function Forgout_password(Request $request){
+        //coming soon
+    }
+
+    public function Change_password(Request $request){
+
+        $loginData = $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:6',
+            'confirm_password' => 'required|same:new_password',
+        ]);  
+
     }
 }
