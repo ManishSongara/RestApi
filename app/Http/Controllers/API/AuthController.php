@@ -66,7 +66,6 @@ class AuthController extends Controller
     }
 
     public function Change_password(Request $request){
-
         $loginData = $request->validate([
             'old_password' => 'required',
             'new_password' => 'required|min:6',
