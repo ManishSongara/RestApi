@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -36,7 +38,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $loginData = $request->validate([
+        /*$loginData = $request->validate([
             'email' => 'email|required',
             'password' => 'required'
         ]);
@@ -49,7 +51,23 @@ class AuthController extends Controller
 
         $accessToken =  $user->createToken('Personal Access Token')->accessToken;
 
-        return response(['user' => auth()->user(), 'access_token' => $accessToken]);
+        return response(['user' => auth()->user()->id, 'access_token' => $accessToken]);*/
+        $credentials = $request->only('email', 'password');
+
+        try {
+            if (! $token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'invalid_credentials'], 400);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'could_not_create_token'], 500);
+        }
+
+        return response()->json([
+            'msg' => 'success',
+            'user'=> auth()->user(),
+            'token'=> $token
+
+        ]);
     }
 
     public function logout(Request $request)
@@ -73,5 +91,7 @@ class AuthController extends Controller
         ]);  
 
     }
+
+   
 
 }
