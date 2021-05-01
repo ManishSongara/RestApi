@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\post;
 use Illuminate\Http\Request;
+use SebastianBergmann\Environment\Console;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class PostsController extends Controller
 {
@@ -35,19 +37,21 @@ class PostsController extends Controller
      */
     public function create(Request $request)
     {
-        $request->validate([
-            'image_path' => 'required|string',
-        ]);
-
         $posts = new post([
             'userid' => $request->u_id,
-            'post_contant' => $request->caption,
-            'image_path' => $request->imgPath,
+            'category' => $request->category,
+            'img_path'=> $request->img_path,
+            'painter_name' => $request->painter_name,
+            'msg' => $request->msg, //caption
+            'prise' => $request->prise,
+            'city' => $request->city,
         ]);
 
         $posts->save();
+
         return response()->json([
-            'message' => 'Successfully created post!'
+            'message' => 'Successfully created user!',
+            'post' => $posts
         ], 201);
     }
 
@@ -59,7 +63,20 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $path = "F:/code/social-site/social_network_frontend/assets/images";
+        $request->validate([
+            'photo' => 'required',
+        ]);
+        $photo = $request->file('photo');
+
+        $fileName = time().'.'.$photo->extension(); 
+        
+        $photo->move($path, $fileName);
+        return  response()->json([
+            'msg' => 'success',
+            'file' =>  $fileName,
+            'path' => $path.'/'.$fileName
+        ]);
     }
 
     /**

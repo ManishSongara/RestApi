@@ -26,7 +26,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::get('logout', [AuthController::class, 'logout']);
 
 Route::get('/post', [PostsController::class, 'create']);
-Route::get('/get', [PostsController::class, 'index']);
+Route::post('/fileUp', [PostsController::class, 'store']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/test',[CommentsController::class,'test']);

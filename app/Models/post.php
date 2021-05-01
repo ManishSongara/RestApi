@@ -11,7 +11,11 @@ class post extends Model
 
     protected $fillable = [
         'userid',
-        'post_contant',
-        'image_path',
+        'category',
+        'img_path',
+        'painter_name',
+        'msg',
+        'prise',
+        'city',
     ];
 }
