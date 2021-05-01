@@ -63,19 +63,24 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+        
         $path = "F:/code/social-site/social_network_frontend/assets/images";
         $request->validate([
             'photo' => 'required',
         ]);
-        $photo = $request->file('photo');
-
-        $fileName = time().'.'.$photo->extension(); 
+        $photo = $request->input('photo');
+        // Log::debug("Hello there".$photo);
+        $photo = str_replace('data:image/png;base64,', '', $photo);
+        // $photo = str_replace(' ', '+', $photo);
+        $image = base64_decode($photo);
+        // Log::debug("Hello there".$image);
+        $imageName = "abc".'.'.'jpg';
+        Storage::disk('public')->put('images/'.$imageName, $image);
         
-        $photo->move($path, $fileName);
         return  response()->json([
             'msg' => 'success',
-            'file' =>  $fileName,
-            'path' => $path.'/'.$fileName
+            'file' =>  $imageName,
+            'path' => "images".'/'.$imageName
         ]);
     }
 
