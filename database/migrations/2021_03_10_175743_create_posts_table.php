@@ -20,7 +20,7 @@ class CreatePostsTable extends Migration
             $table->string('img_path');
             $table->string('painter_name');
             $table->string('msg');  
-            $table->integer('prise');
+            $table->bigInteger('prise');
             $table->string('city');
             $table->timestamps();
         });

@@ -6,9 +6,14 @@ use App\Models\post;
 use Illuminate\Http\Request;
 use SebastianBergmann\Environment\Console;
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
+
 
 class PostsController extends Controller
 {
+    public static $disk = 's3';
     /**
      * Display a listing of the resource.
      *
@@ -16,18 +21,17 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
-     
-        $posts = new post([
-            'userid' => $request->u_id,
-            'post_contant' => $request->caption,
-            'image_path' => $request->imgPath,
-        ]);
+        $filename = $request->filename;
+        $path = storage_path().'/app/public/images/'.$filename;
 
-        $posts->save();
+        if(!File::exists($path)) abort(404);
+        
+        $file = File::get($path);
+        $type = File::mimeType($path);
 
-        return response()->json([
-            'message' => 'Successfully created user!'
-        ], 201);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
     }
 
     /**
@@ -40,9 +44,9 @@ class PostsController extends Controller
         $posts = new post([
             'userid' => $request->u_id,
             'category' => $request->category,
-            'img_path'=> $request->img_path,
-            'painter_name' => $request->painter_name,
-            'msg' => $request->msg, //caption
+            'img_path'=> $request->imgName,
+            'painter_name' => $request->auther,
+            'msg' => $request->caption, //caption
             'prise' => $request->prise,
             'city' => $request->city,
         ]);
@@ -63,7 +67,6 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        
         $path = "F:/code/social-site/social_network_frontend/assets/images";
         $request->validate([
             'photo' => 'required',
@@ -74,13 +77,14 @@ class PostsController extends Controller
         // $photo = str_replace(' ', '+', $photo);
         $image = base64_decode($photo);
         // Log::debug("Hello there".$image);
-        $imageName = "abc".'.'.'jpg';
-        Storage::disk('public')->put('images/'.$imageName, $image);
+        
+       $imageName = time();
+
+        Storage::disk('public')->put('images/'.$imageName.'.'.'jpg',$image);
         
         return  response()->json([
             'msg' => 'success',
             'file' =>  $imageName,
-            'path' => "images".'/'.$imageName
         ]);
     }
 
