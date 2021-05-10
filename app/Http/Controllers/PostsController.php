@@ -13,12 +13,7 @@ use Illuminate\Support\Facades\Response;
 
 class PostsController extends Controller
 {
-    public static $disk = 's3';
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  
     public function index(Request $request)
     {
         $filename = $request->filename;
@@ -34,11 +29,6 @@ class PostsController extends Controller
         return $response;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
         $posts = new post([
@@ -58,13 +48,6 @@ class PostsController extends Controller
             'post' => $posts
         ], 201);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $path = "F:/code/social-site/social_network_frontend/assets/images";
@@ -73,7 +56,7 @@ class PostsController extends Controller
         ]);
         $photo = $request->input('photo');
         // Log::debug("Hello there".$photo);
-        $photo = str_replace('data:image/png;base64,', '', $photo);
+        $photo = str_replace('data:image/jpeg;base64,', '', $photo);
         // $photo = str_replace(' ', '+', $photo);
         $image = base64_decode($photo);
         // Log::debug("Hello there".$image);
@@ -88,48 +71,15 @@ class PostsController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    public function RetriveData(Request $request){
+        if(!$request->id){
+            $Contacts = post::all();
+        }elseif($request->id){
+            $Contacts = post::all()->where('id',$request->id);
+        }
+        return response()->json([
+            'posts' =>  $Contacts->values()->toArray(),
+            'message' => 'Data in Conatcts:',
+        ],201);
     }
 }
