@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\CommentsController;
 
@@ -29,6 +30,13 @@ Route::post('/post', [PostsController::class, 'create']);
 Route::post('/fileUp', [PostsController::class, 'store']);
 Route::get('/getFile', [PostsController::class, 'index']);
 Route::get('/getpost', [PostsController::class, 'RetriveData']);
+Route::get('/work', [PostsController::class, 'PostOfArtist']);
+
+Route::get('/getuser', [ProfileController::class, 'RetriveData']);
+Route::post('/profile/update', [ProfileController::class, 'insert']);
+Route::get('/getProfile', [ProfileController::class, 'getProfile']);
+
+
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/test',[CommentsController::class,'test']);

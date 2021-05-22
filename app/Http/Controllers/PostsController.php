@@ -82,4 +82,11 @@ class PostsController extends Controller
             'message' => 'Data in Conatcts:',
         ],201);
     }
+
+    public function PostOfArtist( Request $request){
+        $work = post::all()->where('userId', $request->uid);
+        return response()->json([
+            'posts' =>  $work->values()->toArray()
+            ]);
+    }
 }
