@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuctionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -35,6 +36,8 @@ Route::get('/work', [PostsController::class, 'PostOfArtist']);
 Route::get('/getuser', [ProfileController::class, 'RetriveData']);
 Route::post('/profile/update', [ProfileController::class, 'insert']);
 Route::get('/getProfile', [ProfileController::class, 'getProfile']);
+
+Route::get('/auction/add',[AuctionController::class, 'test']);
 
 
 
