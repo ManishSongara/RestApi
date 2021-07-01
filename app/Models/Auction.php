@@ -9,6 +9,9 @@ class Auction extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'AuctionName','img','about','link'
+        'AuctionName',
+        'img',
+        'about',
+        'link'
     ];
 }
